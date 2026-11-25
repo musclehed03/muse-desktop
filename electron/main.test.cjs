@@ -112,6 +112,10 @@ async function startWithMocks(downloadsDir, options = {}) {
   const electron = {
     app,
     BrowserWindow,
+    Menu: {
+      buildFromTemplate: (template) => template,
+      setApplicationMenu: () => {},
+    },
     dialog: {
       showMessageBox: (window, settings) => {
         dialogs.push({ window, settings });
@@ -158,7 +162,7 @@ test("declares the Linux desktop entry identity so shells can match the window t
   // StartupWMClass, or desktop shells fall back to a generic icon.
   assert.deepEqual(
     desktopNames,
-    process.platform === "linux" ? ["muse-desktop.desktop"] : [],
+    process.platform === "linux" ? ["baxter-deviant-muse.desktop"] : [],
   );
 });
 

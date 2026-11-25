@@ -1,5 +1,5 @@
 {
-  description = "Muse Desktop application and development environment";
+  description = "Baxter - Our Deviant Muse application and development environment";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -24,8 +24,8 @@
         let
           pkgs = import (nixpkgsFor system) { inherit system; };
           inherit (pkgs) lib;
-          muse-desktop = pkgs.stdenvNoCC.mkDerivation {
-            pname = "muse-desktop";
+          baxter-deviant-muse = pkgs.stdenvNoCC.mkDerivation {
+            pname = "baxter-deviant-muse";
             version = (builtins.fromJSON (builtins.readFile ./package.json)).version;
             # Only runtime sources are needed: the app has no npm runtime dependencies.
             src = lib.cleanSourceWith {
@@ -45,25 +45,25 @@
             dontBuild = true;
             desktopItems = lib.optionals pkgs.stdenv.hostPlatform.isLinux [
               (pkgs.makeDesktopItem {
-                name = "muse-desktop";
+                name = "baxter-deviant-muse";
                 desktopName = "Muse";
                 comment = "Desktop client for Muse";
-                exec = "muse-desktop";
-                icon = "muse-desktop";
+                exec = "baxter-deviant-muse";
+                icon = "baxter-deviant-muse";
                 # Matches the desktop name set by electron/main.cjs so desktop
                 # shells link the running window to this entry and its icon.
-                startupWMClass = "muse-desktop";
+                startupWMClass = "baxter-deviant-muse";
                 categories = [ "Utility" ];
                 terminal = false;
               })
             ];
             installPhase = ''
               runHook preInstall
-              mkdir -p "$out/share/muse-desktop" "$out/bin"
-              cp -r electron build package.json "$out/share/muse-desktop/"
-              install -Dm644 LICENSE "$out/share/licenses/muse-desktop/LICENSE"
-              makeWrapper ${lib.getExe pkgs.electron_45} "$out/bin/muse-desktop" \
-                --add-flags "$out/share/muse-desktop"
+              mkdir -p "$out/share/baxter-deviant-muse" "$out/bin"
+              cp -r electron build package.json "$out/share/baxter-deviant-muse/"
+              install -Dm644 LICENSE "$out/share/licenses/baxter-deviant-muse/LICENSE"
+              makeWrapper ${lib.getExe pkgs.electron_45} "$out/bin/baxter-deviant-muse" \
+                --add-flags "$out/share/baxter-deviant-muse"
             '' + lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
               # Standard freedesktop icon theme locations: one PNG per size plus
               # the scalable SVG so desktop shells find the icon at any size.
@@ -76,12 +76,12 @@
               fi
               for icon in "''${icons[@]}"; do
                 size="$(basename "$icon" .png)"
-                install -Dm644 "$icon" "$out/share/icons/hicolor/$size/apps/muse-desktop.png"
+                install -Dm644 "$icon" "$out/share/icons/hicolor/$size/apps/baxter-deviant-muse.png"
               done
-              install -Dm644 build/icon.svg "$out/share/icons/hicolor/scalable/apps/muse-desktop.svg"
+              install -Dm644 build/icon.svg "$out/share/icons/hicolor/scalable/apps/baxter-deviant-muse.svg"
             '' + lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
               mkdir -p "$out/Applications/Muse.app/Contents/"{MacOS,Resources}
-              makeWrapper "$out/bin/muse-desktop" "$out/Applications/Muse.app/Contents/MacOS/Muse"
+              makeWrapper "$out/bin/baxter-deviant-muse" "$out/Applications/Muse.app/Contents/MacOS/Muse"
               cp build/icon.icns "$out/Applications/Muse.app/Contents/Resources/icon.icns"
               cat > "$out/Applications/Muse.app/Contents/Info.plist" <<EOF
               <?xml version="1.0" encoding="UTF-8"?>
@@ -100,27 +100,27 @@
             '';
             meta = {
               description = "Desktop client for Muse";
-              homepage = "https://github.com/benjaminkitt/muse-desktop";
+              homepage = "https://github.com/musclehed03/muse-desktop";
               license = lib.licenses.mit;
-              mainProgram = "muse-desktop";
+              mainProgram = "baxter-deviant-muse";
               platforms = systems;
             };
           };
         in {
-          inherit muse-desktop;
-          default = muse-desktop;
+          inherit baxter-deviant-muse;
+          default = baxter-deviant-muse;
         });
 
       apps = eachSystem (system:
         let
           app = {
             type = "app";
-            meta.description = "Launch Muse Desktop";
-            program = "${self.packages.${system}.muse-desktop}/bin/muse-desktop";
+            meta.description = "Launch Baxter - Our Deviant Muse";
+            program = "${self.packages.${system}.baxter-deviant-muse}/bin/baxter-deviant-muse";
           };
         in {
           default = app;
-          muse-desktop = app;
+          baxter-deviant-muse = app;
         });
 
       devShells = eachSystem (system:

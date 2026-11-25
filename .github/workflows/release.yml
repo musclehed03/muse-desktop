@@ -140,12 +140,12 @@ jobs:
           set -euo pipefail
           check_icons() {
             for size in 16 24 32 48 64 96 128 256 512 1024; do
-              test -s "$1/usr/share/icons/hicolor/${size}x${size}/apps/muse-desktop.png"
+              test -s "$1/usr/share/icons/hicolor/${size}x${size}/apps/baxter-deviant-muse.png"
             done
           }
           check_desktop() {
-            grep -qx 'Icon=muse-desktop' "$1"
-            grep -qx 'StartupWMClass=muse-desktop' "$1"
+            grep -qx 'Icon=baxter-deviant-muse' "$1"
+            grep -qx 'StartupWMClass=baxter-deviant-muse' "$1"
           }
           check_dir=$(mktemp -d)
           trap 'rm -rf "$check_dir"' EXIT
@@ -153,21 +153,21 @@ jobs:
             mkdir "$check_dir/deb"
             dpkg-deb -x "$deb" "$check_dir/deb"
             check_icons "$check_dir/deb"
-            check_desktop "$check_dir/deb/usr/share/applications/muse-desktop.desktop"
+            check_desktop "$check_dir/deb/usr/share/applications/baxter-deviant-muse.desktop"
             rm -rf "$check_dir/deb"
           done
           for rpm in dist/*.rpm; do
             mkdir "$check_dir/rpm"
             rpm2cpio "$rpm" | (cd "$check_dir/rpm" && cpio -idm --quiet)
             check_icons "$check_dir/rpm"
-            check_desktop "$check_dir/rpm/usr/share/applications/muse-desktop.desktop"
+            check_desktop "$check_dir/rpm/usr/share/applications/baxter-deviant-muse.desktop"
             rm -rf "$check_dir/rpm"
           done
           for appimage in dist/*.AppImage; do
             appimage=$(realpath "$appimage")
             (cd "$check_dir" && "$appimage" --appimage-extract > /dev/null)
             check_icons "$check_dir/squashfs-root"
-            check_desktop "$check_dir/squashfs-root/muse-desktop.desktop"
+            check_desktop "$check_dir/squashfs-root/baxter-deviant-muse.desktop"
             rm -rf "$check_dir/squashfs-root"
           done
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -206,7 +206,7 @@ jobs:
           if gh release view "$TAG" --json isDraft > release.json; then
             node -e 'if (!require("./release.json").isDraft) throw new Error("Release already published")'
           else
-            gh release create "$TAG" --verify-tag --draft --title "Muse $TAG" \
+            gh release create "$TAG" --verify-tag --draft --title "Baxter - Our Deviant Muse $TAG" \
               --generate-notes --notes "Unsigned builds: macOS packages are not notarized, and Windows installers are not developer-signed. Your operating system may display security warnings."
           fi
           gh release upload "$TAG" assets/* --clobber

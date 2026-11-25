@@ -1,16 +1,18 @@
-# Muse Desktop
+# Baxter - Our Deviant Muse
 
-A Windows, macOS, and Linux desktop client for [Muse](https://muse.ai), Meta's Muse agent. It uses Electron's Chromium webview so Muse receives the browser platform it expects, while keeping the main experience in a focused window.
+An unofficial Dollhouse Deviants desktop client for [Muse](https://muse.ai), Meta's Muse agent. It uses Electron's Chromium webview so Muse receives the browser platform it expects, while keeping the main experience in a focused window.
+
+**Unofficial client — not affiliated with, endorsed by, or supported by Meta.** This is a fork of [benjaminkitt/muse-desktop](https://github.com/benjaminkitt/muse-desktop), rebranded and tuned by Dollhouse Deviants. The browser profile directory stays `~/.config/Muse` on purpose, so an existing Muse sign-in carries over.
 
 The app keeps a dedicated browser profile, opens the system file picker for uploads, saves downloads to the user's Downloads directory without overwriting existing names, and grants Muse's web notifications through the native desktop notification system.
 
 ## Download and install
 
-Download an installer from the [latest GitHub release](https://github.com/benjaminkitt/muse-desktop/releases/latest). Choose the file matching your operating system and CPU:
+Download an installer from the [latest GitHub release](https://github.com/musclehed03/muse-desktop/releases/latest). Choose the file matching your operating system and CPU:
 
 - **Windows (x64):** download the `.exe` and run the installer.
-- **macOS:** choose `arm64` for Apple Silicon or `x64` for Intel. Open the `.dmg` and drag Muse into Applications, or extract the `.zip` and move Muse into Applications.
-- **Linux (x64 and ARM64):** install the `.deb` on Debian/Ubuntu (`sudo apt install ./Muse-*.deb`) or the `.rpm` on Fedora (`sudo dnf install ./Muse-*.rpm`). Alternatively, download the AppImage, make it executable with `chmod +x Muse-*.AppImage`, and run it with `./Muse-*.AppImage`. Choose the `x86_64` or `arm64` file matching your CPU (`uname -m`). AppImages may require your distribution's FUSE compatibility package. On NixOS, use the Nix package below instead.
+- **macOS:** choose `arm64` for Apple Silicon or `x64` for Intel. Open the `.dmg` and drag Baxter into Applications, or extract the `.zip` and move Baxter into Applications.
+- **Linux (x64 and ARM64):** install the `.deb` on Debian/Ubuntu (`sudo apt install ./Baxter-*.deb`) or the `.rpm` on Fedora (`sudo dnf install ./Baxter-*.rpm`). Alternatively, download the AppImage, make it executable with `chmod +x Baxter-*.AppImage`, and run it with `./Baxter-*.AppImage`. Choose the `x86_64` or `arm64` file matching your CPU (`uname -m`). AppImages may require your distribution's FUSE compatibility package. On NixOS, use the Nix package below instead.
 
 These builds are not developer-signed or notarized. Windows SmartScreen and macOS Gatekeeper may show warnings or block launch. Only approve a downloaded app if you trust its source; on macOS, **System Settings → Privacy & Security → Open Anyway** may be available after attempting to open it. Managed devices may prohibit unsigned applications.
 
@@ -21,24 +23,24 @@ The flake supports `x86_64-linux`, `aarch64-linux`, `x86_64-darwin`, and `aarch6
 Run without installing:
 
 ```bash
-nix run github:benjaminkitt/muse-desktop
+nix run github:musclehed03/muse-desktop
 ```
 
 Or install into your user profile:
 
 ```bash
-nix profile add github:benjaminkitt/muse-desktop
-muse-desktop
+nix profile add github:musclehed03/muse-desktop
+baxter-deviant-muse
 ```
 
-From a local checkout, use `nix run .` or `nix build .`. The package is exported as both `packages.<system>.default` and `packages.<system>.muse-desktop`; the app is exported as both `apps.<system>.default` and `apps.<system>.muse-desktop`. Linux includes a desktop entry and icon, and macOS includes an `Applications/Muse.app` launcher. A graphical desktop session is required. Nix on non-NixOS Linux may need host graphics integration such as [nixGL](https://github.com/nix-community/nixGL).
+From a local checkout, use `nix run .` or `nix build .`. The package is exported as both `packages.<system>.default` and `packages.<system>.baxter-deviant-muse`; the app is exported as both `apps.<system>.default` and `apps.<system>.baxter-deviant-muse`. Linux includes a desktop entry and icon, and macOS includes an `Applications/Muse.app` launcher. A graphical desktop session is required. Nix on non-NixOS Linux may need host graphics integration such as [nixGL](https://github.com/nix-community/nixGL).
 
 ### Add to a Nix configuration
 
 Add the input to your configuration's `flake.nix`:
 
 ```nix
-inputs.muse-desktop.url = "github:benjaminkitt/muse-desktop";
+inputs.baxter-deviant-muse.url = "github:musclehed03/muse-desktop";
 ```
 
 Pass your flake inputs to modules with `specialArgs = { inherit inputs; };` in `nixosSystem` or `darwinSystem`. Then add this to a NixOS or nix-darwin module:
@@ -46,7 +48,7 @@ Pass your flake inputs to modules with `specialArgs = { inherit inputs; };` in `
 ```nix
 { inputs, pkgs, ... }: {
   environment.systemPackages = [
-    inputs.muse-desktop.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.baxter-deviant-muse.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }
 ```
@@ -56,12 +58,12 @@ For Home Manager, pass `extraSpecialArgs = { inherit inputs; };` to `homeManager
 ```nix
 { inputs, pkgs, ... }: {
   home.packages = [
-    inputs.muse-desktop.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.baxter-deviant-muse.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }
 ```
 
-Here `inputs` is the input set from your flake's `outputs = inputs@{ ... }: ...` function. Rebuild or switch your configuration normally. Keep this input's own Nixpkgs pins unless you deliberately want to change its Electron/platform support. Your `flake.lock` pins the app revision; update the `muse-desktop` input to receive newer versions.
+Here `inputs` is the input set from your flake's `outputs = inputs@{ ... }: ...` function. Rebuild or switch your configuration normally. Keep this input's own Nixpkgs pins unless you deliberately want to change its Electron/platform support. Your `flake.lock` pins the app revision; update the `baxter-deviant-muse` input to receive newer versions.
 
 ## Run and build from source
 
@@ -73,7 +75,7 @@ npm install
 npm run dev
 ```
 
-The Nix shell supports both Intel and Apple Silicon macOS, as well as x86_64 and ARM Linux, and supplies Electron 43. On macOS, enter `nix develop`, run `npm install`, then use the same commands.
+The Nix shell supports both Intel and Apple Silicon macOS, as well as x86_64 and ARM Linux, and supplies Electron 45. On macOS, enter `nix develop`, run `npm install`, then use the same commands.
 
 Create installers with:
 
@@ -85,17 +87,15 @@ On Linux this creates AppImage, `.deb`, and `.rpm` packages. On macOS it creates
 
 ## Linux desktop integration
 
-Desktop shells (GNOME, KDE) show the app icon by matching the running window to an installed `muse-desktop.desktop` entry, which points at `muse-desktop` icons in the freedesktop hicolor theme. The identity basename `muse-desktop` is set in four places that must stay in sync: `desktopName` and `build.linux` in `package.json`, the `app.setDesktopName` call in `electron/main.cjs`, and the desktop entry in `flake.nix`. `test/packaging.test.cjs` fails if they drift apart.
+Desktop shells (GNOME, KDE) show the app icon by matching the running window to an installed `baxter-deviant-muse.desktop` entry, which points at `baxter-deviant-muse` icons in the freedesktop hicolor theme. The identity basename `baxter-deviant-muse` is set in four places that must stay in sync: `desktopName` and `build.linux` in `package.json`, the `app.setDesktopName` call in `electron/main.cjs`, and the desktop entry in `flake.nix`. `test/packaging.test.cjs` fails if they drift apart. The release workflow (`.github/workflows/release.yml`) verifies the same identity in the built artifacts.
 
-Linux packages install one PNG per size from `build/icons/` (16–1024px), and the Nix package also installs `build/icon.svg` as a scalable icon. Regenerate the sized set after changing the icon source:
+Linux packages install one PNG per size from `build/icons/` (16–1024px), and the Nix package also installs `build/icon.svg` as a scalable icon. Regenerate the icon set from the generator script after changing the icon design:
 
 ```bash
-for size in 16 24 32 48 64 96 128 256 512 1024; do
-  magick build/icon.png -resize ${size}x${size} build/icons/${size}x${size}.png
-done
+python3 tools/make-icon.py
 ```
 
-Already-installed packages keep their old icon until rebuilt and reinstalled; desktop shells may also cache icons until relogin. The release workflow verifies that Linux artifacts contain the icon set and a matching desktop entry.
+The script renders the near-black badge with the brushed-silver pinstripe frame, neon pink hairline, glossy gold "B", and platinum diamond ornament (Dollhouse Deviants branding, east light). Already-installed packages keep their old icon until rebuilt and reinstalled; desktop shells may also cache icons until relogin. The release workflow verifies that Linux artifacts contain the icon set and a matching desktop entry.
 
 ## Release workflow and retries
 
@@ -105,7 +105,7 @@ If a build or publication fails after the tag was pushed, start a fresh **Releas
 
 ## Clear app data
 
-Quit Muse, then remove its profile and cache:
+Quit Baxter, then remove its profile and cache:
 
 ```bash
 rm -rf "${XDG_CONFIG_HOME:-$HOME/.config}/Muse" \
@@ -133,4 +133,4 @@ Some identity providers may prohibit authentication in embedded browsers. The po
 
 ## License
 
-Muse Desktop's source code is available under the [MIT License](LICENSE). Muse itself and third-party dependencies remain subject to their respective terms and licenses.
+Baxter - Our Deviant Muse's source code is available under the [MIT License](LICENSE). Muse itself and third-party dependencies remain subject to their respective terms and licenses.

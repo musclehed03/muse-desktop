@@ -34,7 +34,7 @@ function pngSize(file) {
 }
 
 test("declares one Linux desktop identity in package.json", () => {
-  assert.equal(desktopBaseName, "muse-desktop");
+  assert.equal(desktopBaseName, "baxter-deviant-muse");
   assert.equal(packageJson.build.linux.syncDesktopName, true);
   // A single icon.png installs only one hicolor size; Linux targets need the
   // multi-size icon set directory.
@@ -65,12 +65,12 @@ test("keeps the packaged desktop name and hicolor icons in the Nix flake", () =>
   );
   assert.match(
     flake,
-    /share\/icons\/hicolor\/\$size\/apps\/muse-desktop\.png/,
+    /share\/icons\/hicolor\/\$size\/apps\/baxter-deviant-muse\.png/,
     "each build/icons size must install into its hicolor size directory",
   );
   assert.match(
     flake,
-    /share\/icons\/hicolor\/scalable\/apps\/muse-desktop\.svg/,
+    /share\/icons\/hicolor\/scalable\/apps\/baxter-deviant-muse\.svg/,
     "the scalable SVG must install into hicolor scalable",
   );
   assert.match(
@@ -86,5 +86,19 @@ test("sets the runtime desktop name that desktop shells match against", () => {
     mainProcess,
     new RegExp(`app\\.setDesktopName\\("${desktopBaseName}\\.desktop"\\)`),
     "electron/main.cjs must set the desktop name to the packaged .desktop file",
+  );
+});
+
+test("keeps the Baxter rebrand identity in sync across the shell", () => {
+  assert.equal(packageJson.build.productName, "Baxter - Our Deviant Muse");
+  assert.equal(packageJson.build.appId, "com.dollhousedeviants.baxter");
+  assert.match(mainProcess, /title: "Baxter - Our Deviant Muse"/);
+  // The About dialog must say plainly that this is unofficial and not Meta's.
+  assert.match(mainProcess, /Not affiliated with, endorsed by, or supported by Meta/);
+  assert.match(mainProcess, /About Baxter - Our Deviant Muse/);
+  // The sign-in profile directory stays "Muse" so the existing sign-in carries over.
+  assert.match(
+    mainProcess,
+    /app\.setPath\("userData", path\.join\(app\.getPath\("appData"\), "Muse"\)\)/,
   );
 });

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, session, shell } = require("electron");
+const { app, BrowserWindow, dialog, Menu, session, shell } = require("electron");
 const path = require("node:path");
 const fs = require("node:fs");
 
@@ -125,7 +125,7 @@ function configureWindowNavigation(window, isPopup = false) {
 
 function createMuseWindow() {
   const window = new BrowserWindow({
-    title: "Muse",
+    title: "Baxter - Our Deviant Muse",
     width: 1180,
     height: 820,
     minWidth: 760,
@@ -156,7 +156,7 @@ function createMuseWindow() {
         window.show();
         const { response } = await dialog.showMessageBox(window, {
           type: "error",
-          title: "Could not load Muse",
+          title: "Could not load Baxter",
           message: "Muse could not be reached.",
           detail: "Check your internet connection, then try again.",
           buttons: ["Retry", "Close"],
@@ -177,15 +177,46 @@ function createMuseWindow() {
   return window;
 }
 
+function showAbout() {
+  void dialog.showMessageBox({
+    type: "info",
+    title: "About Baxter - Our Deviant Muse",
+    message: `Baxter - Our Deviant Muse ${app.getVersion()}`,
+    detail:
+      "Unofficial desktop client for Muse (muse.ai).\n" +
+      "Not affiliated with, endorsed by, or supported by Meta.\n" +
+      "Built by Dollhouse Deviants.",
+    buttons: ["Close"],
+    defaultId: 0,
+  });
+}
+
 function start() {
   // Align the running window with the installed Linux desktop entry so desktop
-  // shells (GNOME, KDE) resolve the muse-desktop icon via WM_CLASS/app_id.
+  // shells (GNOME, KDE) resolve the baxter-deviant-muse icon via WM_CLASS/app_id.
   if (process.platform === "linux") {
-    app.setDesktopName("muse-desktop.desktop");
+    app.setDesktopName("baxter-deviant-muse.desktop");
   }
 
   // Keep browser profile data in a predictable, product-specific directory.
+  // NOTE: the directory stays "Muse" on purpose — renaming it would sign
+  // the user out of muse.ai and clear the existing profile.
   app.setPath("userData", path.join(app.getPath("appData"), "Muse"));
+
+  // Minimal application menu: About (with the unofficial-client notice) and
+  // Quit. A standard menu bar only — no floating UI, nothing covering content.
+  Menu.setApplicationMenu(
+    Menu.buildFromTemplate([
+      {
+        label: "Baxter",
+        submenu: [
+          { label: "About Baxter - Our Deviant Muse", click: showAbout },
+          { type: "separator" },
+          { label: "Quit", accelerator: "CmdOrCtrl+Q", click: () => app.quit() },
+        ],
+      },
+    ]),
+  );
 
   app.whenReady().then(() => {
     configureSession(session.fromPartition("persist:muse"));
