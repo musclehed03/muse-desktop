@@ -62,7 +62,7 @@
               mkdir -p "$out/share/muse-desktop" "$out/bin"
               cp -r electron build package.json "$out/share/muse-desktop/"
               install -Dm644 LICENSE "$out/share/licenses/muse-desktop/LICENSE"
-              makeWrapper ${lib.getExe pkgs.electron_43} "$out/bin/muse-desktop" \
+              makeWrapper ${lib.getExe pkgs.electron_45} "$out/bin/muse-desktop" \
                 --add-flags "$out/share/muse-desktop"
             '' + lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
               # Standard freedesktop icon theme locations: one PNG per size plus
@@ -129,10 +129,10 @@
           isLinux = pkgs.stdenv.hostPlatform.isLinux;
         in {
           default = pkgs.mkShell ({
-            packages = [ pkgs.nodejs_24 pkgs.electron_43 ]
+            packages = [ pkgs.nodejs_24 pkgs.electron_45 ]
               ++ pkgs.lib.optionals isLinux [ pkgs.libxcrypt-legacy pkgs.rpm ];
             ELECTRON_SKIP_BINARY_DOWNLOAD = "1";
-            ELECTRON_OVERRIDE_DIST_PATH = "${pkgs.electron_43}/bin";
+            ELECTRON_OVERRIDE_DIST_PATH = "${pkgs.electron_45}/bin";
           } // pkgs.lib.optionalAttrs isLinux {
             # electron-builder's Linux packaging helper needs legacy libcrypt.
             LD_LIBRARY_PATH = "${pkgs.libxcrypt-legacy}/lib";

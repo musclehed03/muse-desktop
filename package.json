@@ -12,7 +12,7 @@
     "test": "node --test electron/main.test.cjs test/packaging.test.cjs"
   },
   "devDependencies": {
-    "electron": "43.5.1",
+    "electron": "45.5.0",
     "electron-builder": "^26.0.12"
   },
   "build": {
